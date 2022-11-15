@@ -1,96 +1,43 @@
-import "./App.css";
-// import { data } from "./weather";
-import "./reset.css";
-import { useEffect, useState } from "react";
+import './App.css';
+import './reset.css';
+import { useEffect, useState } from 'react';
 
 function App() {
-  const [cityNames, setCityNames] = useState();
-  const [selectedCityNames, setSelectedCityNames] = useState("tokyo");
-  const [res, setRes] = useState();
+  // fetchしたデータを保持するために必要
+  const [data, setData] = useState();
 
   useEffect(() => {
-    async function f() {
-      const result1 = await fetch("http://localhost:8000/weather/city_names");
-      setCityNames(await result1.json());
-    }
-    f();
+    (async () => {
+      // 基本は下のURL部分を変えるだけでおっけい
+      const result = await fetch('https://jsonplaceholder.typicode.com/albums');
+      setData(await result.json());
+    })();
   }, []);
 
-  useEffect(() => {
-    async function f() {
-      const result2 = await fetch(
-        "http://localhost:8000/weather/" + selectedCityNames
-      );
-      setRes([await result2.json()]);
-    }
-    f();
-  }, [selectedCityNames]);
-
+  // mapの説明用
+  const colors = ['orange', 'green', 'blue'];
   return (
     <>
-      {/* <div style={{ display: "flex", flexDirection: "column", gap: 30 }}>
-        {res?.map((item) => (
-          <div
-            style={{
-              width: 400,
-              height: 100,
-              background: "green",
-              borderRadius: 30,
-              padding: 20,
-            }}
-          >
-            <div>id: {item.id}</div>
-            <div>title: {item.title}</div>
-          </div>
-        ))}
-      </div> */}
-      <select onChange={(e) => setSelectedCityNames(e.target.value)}>
-        {cityNames?.map((cityName) => (
-          <option value={cityName}>{cityName}</option>
-        ))}
-      </select>
+      {/* map無しバージョン */}
+      <div>orange</div>
+      <div>green</div>
+      <div>blue</div>
 
-      {/* <div>{JSON.stringify(cityNames)}</div> */}
-      {res?.map((item) => (
-        <div key={item.id} className="card">
-          <img src="/weather.png" alt="天気の画像" />
-          <p>City Name</p>
-          <div className="city">
-            <div className="date">
-              <p>{item.name}</p>
-            </div>
-          </div>
-          <p>Weather Condition</p>
-          <div className="date">
-            <p>{item.weather[0].main}</p>
-          </div>
-          <div className="under">
-            <div className="Date">
-              <p>Data</p>
-              <div className="date">
-                <p>
-                  {new Date(item.dt * 1000)
-                    .toLocaleDateString()
-                    .split("/")
-                    .join("-")}
-                </p>
-              </div>
-            </div>
-            <div className="Temp">
-              <p>Temprature</p>
-              <div className="date">
-                <p>{~~(item.main.temp - 273)}℃</p>
-              </div>
-            </div>
-            <div className="Humidity">
-              <p>Humidiy</p>
-              <div className="date">
-                <p>{item.main.humidity}%</p>
-              </div>
-            </div>
-          </div>
-        </div>
+      {/* map有りバージョン */}
+      {colors.map((color) => (
+        <div>{color}</div>
       ))}
+
+      {/* fetchしたdataを表示 */}
+      <div className='wrapper'>
+        {data?.map((item) => (
+          <div key={item.id} className='item'>
+            <h2>title: {item.title}</h2>
+            <p>id: {item.id}</p>
+            <p>userId: {item.userId}</p>
+          </div>
+        ))}
+      </div>
     </>
   );
 }
