@@ -8,7 +8,7 @@
 npm install
 ```
 
-## step2
+## step3
 
 ```
 npm run start
